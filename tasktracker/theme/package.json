@@ -1,0 +1,14 @@
+{
+  "name": "theme",
+  "version": "1.0.0",
+  "description": "Tailwind CSS theme for Django project",
+  "scripts": {
+    "build": "tailwindcss -i ./src/styles.css -o ./static/css/styles.css --watch",
+    "build-prod": "tailwindcss -i ./src/styles.css -o ./static/css/styles.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32"
+  }
+} 

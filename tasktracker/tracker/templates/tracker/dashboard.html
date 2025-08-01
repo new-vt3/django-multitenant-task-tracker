@@ -1,0 +1,14 @@
+
+{% extends 'tracker/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Dashboard</h1>
+
+<a href="{% url 'create_task' %}" class="mb-4 inline-block bg-blue-500 text-white px-4 py-2 rounded">
+    Create New Task
+</a>
+
+{% include 'tracker/task_list.html' with tasks=tasks %}
+{% endblock %}

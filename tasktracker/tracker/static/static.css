@@ -1,0 +1,21 @@
+h2 {
+    color: #395B64;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+form {
+    margin-top: 12px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #F5F5F5;
+}
+
+button[type="submit"] {
+    background-color: #395B64;
+    color: #fff;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
