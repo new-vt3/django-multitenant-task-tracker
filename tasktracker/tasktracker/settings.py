@@ -4,8 +4,6 @@ import pprint
 import dj_database_url
 import django_heroku
 
-# ✅ Required early registration of the tenant backend
-import django_tenants.postgresql_backend.base  # DO NOT REMOVE
 
 print("✅ Starting settings.py...")
 
