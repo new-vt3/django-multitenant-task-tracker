@@ -13,9 +13,9 @@ from .forms import TaskForm
 def task_list(request):
     user = request.user
     if user.is_superuser:
-        tasks = Task.objects.all().order_by('-due_date')  # Superuser sees all tasks
+        tasks = Task.objects.all().order_by('-due_date')  
     else:
-        tasks = Task.objects.filter(assigned_to=user).order_by('-due_date')  # Normal user: tasks assigned to them
+        tasks = Task.objects.filter(assigned_to=user).order_by('-due_date')  
 
     paginator = Paginator(tasks, 5)  
     page_number = request.GET.get('page')
