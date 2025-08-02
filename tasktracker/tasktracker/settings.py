@@ -80,8 +80,12 @@ TEMPLATES = [
 # ✅ Database config
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL", "postgresql://vt3db_user:98c1jtteY9EXufsVLRhe6ZqcwdPApJRl@dpg-d26g75ali9vc7393iveg-a/vt3db"),
+        default=os.environ.get(
+            "DATABASE_URL",
+            "postgresql://vt3db_user:98c1jtteY9EXufsVLRhe6ZqcwdPApJRl@dpg-d26g75ali9vc7393iveg-a/vt3db"
+        ),
         conn_max_age=600,
+        engine='django_tenants.postgresql_backend'  # ✅ This line is required
     )
 }
 # ✅ Set the correct DB engine for django-tenants
