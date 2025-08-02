@@ -6,11 +6,11 @@ import django_heroku
 
 print("✅ Starting settings.py...")
 
-# === Base Directory ===
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 print(f"📁 BASE_DIR = {BASE_DIR}")
 
-# === Security Settings ===
+
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
@@ -18,17 +18,17 @@ print(f"🔐 SECRET_KEY = {SECRET_KEY}")
 print(f"🐞 DEBUG = {DEBUG}")
 print(f"🌐 ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 
-# === Tailwind Setup (Optional) ===
+
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 INTERNAL_IPS = ['127.0.0.1']
 
-# === Tenant Configuration ===
+
 TENANT_MODEL = "customers.Client"
 TENANT_DOMAIN_MODEL = "customers.Domain"
 print(f"🏢 TENANT_MODEL = {TENANT_MODEL}, TENANT_DOMAIN_MODEL = {TENANT_DOMAIN_MODEL}")
 
-# === Application Definitions ===
+
 SHARED_APPS = (
     "django_tenants",
     "customers",
@@ -44,7 +44,7 @@ TENANT_APPS = (
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "tracker",  # tenant-specific app
+    "tracker",  
 )
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -105,7 +105,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 print("🔐 Auth settings done.")
 
-# === Email Backend ===
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -115,14 +115,14 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 print(f"✉️ EMAIL_HOST_USER = {EMAIL_HOST_USER}")
 
-# === Static Files ===
+
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / TAILWIND_APP_NAME / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 print("📁 Static files setup complete.")
 
-# === Localization ===
+
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
@@ -130,7 +130,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 print("🌍 Localization settings set.")
 
-# === Final Setup ===
+
 print("🚀 Finalizing Django-Heroku settings...")
 django_heroku.settings(locals())
 print("✅ settings.py loaded successfully.")
