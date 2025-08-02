@@ -1,32 +1,30 @@
 import os
 from pathlib import Path
+import pprint
 import dj_database_url
 import django_heroku
-import pprint  # ✅ for pretty-printing debug output
 
-# === Paths ===
+# ✅ Force import of custom database wrapper early
+import django_tenants.postgresql_backend.base  # <<< required to register the backend
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# === Security ===
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
-# === Tailwind (Optional) ===
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 INTERNAL_IPS = ['127.0.0.1']
 
-# === Tenant Setup ===
 TENANT_MODEL = "customers.Client"
 TENANT_DOMAIN_MODEL = "customers.Domain"
 
-# === Installed Apps ===
 SHARED_APPS = (
     "django_tenants",
     "customers",
-    "tailwind",  # Optional
-    "theme",     # Optional
+    "tailwind",
+    "theme",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
 )
@@ -41,9 +39,8 @@ TENANT_APPS = (
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
-# === Middleware ===
 MIDDLEWARE = [
-    "django_tenants.middleware.main.TenantMainMiddleware",  # ✅ Must be first
+    "django_tenants.middleware.main.TenantMainMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -54,11 +51,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# === URL & WSGI ===
 ROOT_URLCONF = "tasktracker.urls"
 WSGI_APPLICATION = "tasktracker.wsgi.application"
 
-# === Templates ===
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -74,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-# === Database Setup ===
+# ✅ DATABASE CONFIGURATION
 print("🔍 Setting up database...")
 
 DATABASES = {
@@ -83,23 +78,21 @@ DATABASES = {
         conn_max_age=600
     )
 }
-
-# ✅ Override the engine after dj_database_url config
 DATABASES['default']['ENGINE'] = 'django_tenants.postgresql_backend'
 
-# ✅ DEBUG print database config
+# ✅ Print for debugging
 print("✅ DATABASE CONFIGURATION:")
 pprint.pprint(DATABASES)
 print("📦 ENGINE in use:", DATABASES['default']['ENGINE'])
 
-# === DB Router ===
+# ✅ DB router for django-tenants
 DATABASE_ROUTERS = ['django_tenants.routers.TenantSyncRouter']
 
 # === Auth ===
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-# === Email Settings ===
+# === Email ===
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -121,8 +114,7 @@ USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# === Render-friendly settings ===
+# ✅ Finalize settings for Render/Heroku
 print("🚀 Finalizing Django-Heroku settings...")
 django_heroku.settings(locals())
 print("✅ settings.py loaded successfully.")
-
