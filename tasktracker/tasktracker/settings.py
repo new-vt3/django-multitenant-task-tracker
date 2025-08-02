@@ -4,34 +4,34 @@ import pprint
 import dj_database_url
 import django_heroku
 
-
 print("✅ Starting settings.py...")
 
+# === Base Directory ===
 BASE_DIR = Path(__file__).resolve().parent.parent
 print(f"📁 BASE_DIR = {BASE_DIR}")
 
-# ✅ Secret key & debug
+# === Security Settings ===
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 print(f"🔐 SECRET_KEY = {SECRET_KEY}")
 print(f"🐞 DEBUG = {DEBUG}")
-
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 print(f"🌐 ALLOWED_HOSTS = {ALLOWED_HOSTS}")
 
-# Tailwind setup
+# === Tailwind Setup (Optional) ===
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 INTERNAL_IPS = ['127.0.0.1']
 
-# Tenant setup
+# === Tenant Configuration ===
 TENANT_MODEL = "customers.Client"
 TENANT_DOMAIN_MODEL = "customers.Domain"
 print(f"🏢 TENANT_MODEL = {TENANT_MODEL}, TENANT_DOMAIN_MODEL = {TENANT_DOMAIN_MODEL}")
 
+# === Application Definitions ===
 SHARED_APPS = (
     "django_tenants",
-    "customers",  # your app for Client and Domain models
+    "customers",
     "tailwind",
     "theme",
     "django.contrib.contenttypes",
@@ -41,17 +41,17 @@ SHARED_APPS = (
 TENANT_APPS = (
     "django.contrib.admin",
     "django.contrib.auth",
-    "django.contrib.contenttypes",  # also required inside tenant apps
+    "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "tracker",  # your app with tenant-specific models
+    "tracker",  # tenant-specific app
 )
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 print(f"📦 INSTALLED_APPS = {INSTALLED_APPS}")
 
 MIDDLEWARE = [
-    "django_tenants.middleware.main.TenantMainMiddleware",  # ✅ must be first
+    "django_tenants.middleware.main.TenantMainMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -66,7 +66,7 @@ print(f"🧱 MIDDLEWARE = {MIDDLEWARE}")
 ROOT_URLCONF = "tasktracker.urls"
 WSGI_APPLICATION = "tasktracker.wsgi.application"
 
-# ✅ TEMPLATES setup
+# === Templates ===
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -83,13 +83,14 @@ TEMPLATES = [
 ]
 print("🧾 TEMPLATES configured.")
 
-# ✅ DATABASE CONFIGURATION
+# === Database ===
 print("🔍 Setting up database...")
-
+DATABASE_URL = "postgresql://vt3db_user:98c1jtteY9EXufsVLRhe6ZqcwdPApJRl@dpg-d26g75ali9vc7393iveg-a.oregon-postgres.render.com/vt3db"
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600
+    'default': dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 DATABASES['default']['ENGINE'] = 'django_tenants.postgresql_backend'
@@ -99,12 +100,12 @@ pprint.pprint(DATABASES)
 DATABASE_ROUTERS = ['django_tenants.routers.TenantSyncRouter']
 print(f"🚦 DATABASE_ROUTERS = {DATABASE_ROUTERS}")
 
-# === Auth ===
+# === Authentication ===
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 print("🔐 Auth settings done.")
 
-# === Email ===
+# === Email Backend ===
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -129,7 +130,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 print("🌍 Localization settings set.")
 
-# ✅ Finalize settings for Render/Heroku
+# === Final Setup ===
 print("🚀 Finalizing Django-Heroku settings...")
 django_heroku.settings(locals())
 print("✅ settings.py loaded successfully.")
